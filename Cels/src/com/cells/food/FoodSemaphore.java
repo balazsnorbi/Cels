@@ -67,8 +67,12 @@ public class FoodSemaphore implements IEatable {
 		return hasSucceded;
 	}
 	
-	boolean isAvailable() {
+	/**
+	 * 
+	 * @return
+	 * 		<code> true </code> if the food stock is enough,<code> false </code> otherwise
+	 */
+	private boolean isAvailable() {
 		return (foodStock > 0 ? true : false);
 	}
-
 }
