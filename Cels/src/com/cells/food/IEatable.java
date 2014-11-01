@@ -17,7 +17,7 @@ public interface IEatable {
 	boolean eat();
 	
 	/**
-	 * Simulate the supplemeting the food stock task.
+	 * Simulate the supplementing the food stock task.
 	 * 
 	 * @return
 	 * 		<code> true </code> if the simulation had success,<code> false </code> otherwise
