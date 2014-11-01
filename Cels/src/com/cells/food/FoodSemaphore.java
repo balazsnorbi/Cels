@@ -9,16 +9,15 @@ import java.util.logging.Logger;
  * @author <a href="mailto:groza.claudiu@icloud.com">Claudiu Groza</a>
  *
  */
-public class FoodSemaphore implements IEatable {
+class FoodSemaphore extends AbstractFood {
 	private final static Logger LOGGER = Logger.getLogger(FoodSemaphore.class.getName()); 
 	
-	private long foodStock;
 	private final Semaphore mSemaphore;
 	
 	/**
 	 * 
 	 * @param foodStock
-	 * 				the initial food stock
+	 * 				the initial amount of food stock
 	 * @param enableFairness
 	 * 				activate the fairness of the semaphore
 	 */
@@ -33,7 +32,7 @@ public class FoodSemaphore implements IEatable {
 		
 		try {
 			mSemaphore.acquire();
-			if(isAvailable()) {
+			if(isAvailableFood()) {
 				--foodStock;
 			}
 		} catch (InterruptedException e) {
@@ -65,14 +64,5 @@ public class FoodSemaphore implements IEatable {
 		}
 		
 		return hasSucceded;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 * 		<code> true </code> if the food stock is enough,<code> false </code> otherwise
-	 */
-	private boolean isAvailable() {
-		return (foodStock > 0 ? true : false);
 	}
 }
