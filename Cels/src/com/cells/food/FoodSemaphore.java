@@ -15,6 +15,13 @@ public class FoodSemaphore implements IEatable {
 	private long foodStock;
 	private final Semaphore mSemaphore;
 	
+	/**
+	 * 
+	 * @param foodStock
+	 * 				the initial food stock
+	 * @param enableFairness
+	 * 				activate the fairness of the semaphore
+	 */
 	protected FoodSemaphore(long foodStock, boolean enableFairness) {
 		this.foodStock = foodStock;
 		this.mSemaphore = new Semaphore(1, enableFairness);
