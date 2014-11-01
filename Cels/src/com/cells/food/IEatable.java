@@ -7,20 +7,21 @@ package com.cells.food;
  *
  */
 public interface IEatable {
-	
 	/**
 	 * Simulate the eating task.
 	 * 
 	 * @return
-	 * 		<code> true </code> if the simulation had success,<code> false </code> otherwise
+	 * 		<code> true </code> if succeeded,<code> false </code> otherwise
 	 */
 	boolean eat();
 	
 	/**
 	 * Simulate supplementing the food stock task.
 	 * 
+	 * @param supplementStock
+	 * 			the value with stock is supplemented
 	 * @return
-	 * 		<code> true </code> if the simulation had success,<code> false </code> otherwise
+	 * 		<code> true </code> if succeeded,<code> false </code> otherwise
 	 */
 	boolean supplement(long supplementStock);
 }

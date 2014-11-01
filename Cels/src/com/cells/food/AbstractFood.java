@@ -20,7 +20,7 @@ public abstract class AbstractFood implements IEatable {
 	 * @return
 	 * 		<code> true </code> if the food stock is enough,<code> false </code> otherwise
 	 */
-	protected boolean isAvailableFood() {
+	protected boolean isFoodAvailable() {
 		return (foodStock > 0 ? true : false);
 	}
 }

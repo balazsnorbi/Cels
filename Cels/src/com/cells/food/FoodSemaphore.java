@@ -32,20 +32,20 @@ class FoodSemaphore extends AbstractFood {
 
 	@Override
 	public boolean eat() {
-		boolean hasSucceded = true;
+		boolean hasSucceded = false;
 		
-		try {
-			mSemaphore.acquire();
-			if(isAvailableFood()) {
-				--foodStock;
+		if(mSemaphore.tryAcquire()) {
+			try {
+				mSemaphore.acquire();
+				if(isFoodAvailable()) {
+					--foodStock;
+					hasSucceded = true;
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} finally {
+				mSemaphore.release();
 			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			LOGGER.info("Not able to eat.");
-			
-			hasSucceded = false;
-		} finally {
-			mSemaphore.release();
 		}
 		
 		return hasSucceded;
@@ -53,18 +53,17 @@ class FoodSemaphore extends AbstractFood {
 
 	@Override
 	public boolean supplement(long supplementStock) {
-		boolean hasSucceded = true;
-		
-		try {
-			mSemaphore.acquire();
-			foodStock += supplementStock;
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			LOGGER.info("Not able to supplement.");
-			
-			hasSucceded = false;
-		} finally {
-			mSemaphore.release();
+		boolean hasSucceded = false;
+		if(mSemaphore.tryAcquire()) {
+			try {
+				mSemaphore.acquire();
+				foodStock += supplementStock;
+				hasSucceded = true;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} finally {
+				mSemaphore.release();
+			}
 		}
 		
 		return hasSucceded;
