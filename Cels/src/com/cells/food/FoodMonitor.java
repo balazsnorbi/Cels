@@ -2,12 +2,17 @@ package com.cells.food;
 
 import java.util.logging.Logger;
 
+import net.jcip.annotations.ThreadSafe;
+
 /**
+ * 
  * Class that provides synchronizing using the monitor concept.
  * 
  * @author <a href="mailto:groza.claudiu@icloud.com">Claudiu Groza</a>
  *
  */
+
+@ThreadSafe
 class FoodMonitor extends AbstractFood {
 	private final static Logger LOGGER = Logger.getLogger(FoodMonitor.class.getName());
 	

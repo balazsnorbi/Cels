@@ -3,12 +3,16 @@ package com.cells.food;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Logger;
 
+import net.jcip.annotations.ThreadSafe;
+
 /**
  * Class that provides synchronizing using a simple binary semaphore.
  * 
  * @author <a href="mailto:groza.claudiu@icloud.com">Claudiu Groza</a>
  *
  */
+
+@ThreadSafe
 class FoodSemaphore extends AbstractFood {
 	private final static Logger LOGGER = Logger.getLogger(FoodSemaphore.class.getName()); 
 	
