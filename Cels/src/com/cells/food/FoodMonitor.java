@@ -29,9 +29,10 @@ class FoodMonitor extends AbstractFood {
 	public synchronized boolean eat() {
 		if(isFoodAvailable()) {
 			--foodStock;
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 
 	@Override
