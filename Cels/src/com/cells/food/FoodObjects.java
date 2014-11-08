@@ -15,20 +15,20 @@ import net.jcip.annotations.ThreadSafe;
  */
 @ThreadSafe
 class FoodObjects implements IEatable{
-	private final BlockingQueue<Object> queque;
+	private final BlockingQueue<Object> queue;
 	
 	public FoodObjects(int foodStockCapacity, int initialStock) {
-		queque = new ArrayBlockingQueue<Object>(foodStockCapacity);
+		queue = new ArrayBlockingQueue<Object>(foodStockCapacity);
 		
 		for(int i=0; i<initialStock; i++) {
-			queque.add(new Object());
+			queue.add(new Object());
 		}
 	}
 	
 	@GuardedBy("this.queque")
 	@Override
 	public boolean eat() {
-		if(queque.poll() != null){
+		if(queue.poll() != null){
 			return true;
 		}
 		return false;
@@ -37,9 +37,9 @@ class FoodObjects implements IEatable{
 	@GuardedBy("this.queque")
 	@Override
 	public boolean supplement(long supplementStock) {
-		synchronized (queque) {
+		synchronized (queue) {
 			for(int i=0; i<supplementStock; i++) {
-				queque.offer(new Object());
+				queue.offer(new Object());
 			}
 		}
 		
