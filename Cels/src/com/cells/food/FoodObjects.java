@@ -8,7 +8,7 @@ import net.jcip.annotations.ThreadSafe;
 
 @ThreadSafe
 class FoodObjects implements IEatable{
-	private BlockingQueue<Object> queque;
+	private final BlockingQueue<Object> queque;
 	
 	public FoodObjects(int foodStockCapacity, int initialStock) {
 		queque = new ArrayBlockingQueue<Object>(foodStockCapacity);
