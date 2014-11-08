@@ -1,11 +1,18 @@
 package com.cells.food;
 
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
+/**
+ * Class that provides synchronizing using a BlockingQueue.
+ * 
+ * @author <a href="mailto:groza.claudiu@icloud.com">Claudiu Groza</a>
+ *
+ */
 @ThreadSafe
 class FoodObjects implements IEatable{
 	private final BlockingQueue<Object> queque;

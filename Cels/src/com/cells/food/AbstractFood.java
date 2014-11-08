@@ -1,15 +1,17 @@
 package com.cells.food;
 
-import net.jcip.annotations.ThreadSafe;
+import net.jcip.annotations.NotThreadSafe;
 
 /**
  * Abstract class for classes that work with food stock number.
  * 
+ * For concurrent use, the subclasses must implement the synchronize policy.
+ * 
  * @author <a href="mailto:groza.claudiu@icloud.com">Claudiu Groza</a>
  *
  */
-@ThreadSafe
-public abstract class AbstractFood implements IEatable {
+@NotThreadSafe
+abstract class AbstractFood implements IEatable {
 	protected long foodStock = 0;
 
 	@Override

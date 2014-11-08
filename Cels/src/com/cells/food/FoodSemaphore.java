@@ -7,12 +7,11 @@ import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 /**
- * Class that provides synchronizing using a simple binary semaphore.
+ * Class that provides synchronizing using a simple binary Semaphore.
  * 
  * @author <a href="mailto:groza.claudiu@icloud.com">Claudiu Groza</a>
  *
  */
-
 @ThreadSafe
 class FoodSemaphore extends AbstractFood {
 	private final static Logger LOGGER = Logger.getLogger(FoodSemaphore.class.getName()); 
@@ -24,7 +23,7 @@ class FoodSemaphore extends AbstractFood {
 	 * @param foodStock
 	 * 				the initial amount of food stock
 	 * @param enableFairness
-	 * 				activate the fairness of the semaphore
+	 * 				enable the fairness of the semaphore
 	 */
 	protected FoodSemaphore(long foodStock, boolean enableFairness) {
 		this.foodStock = foodStock;
@@ -34,42 +33,33 @@ class FoodSemaphore extends AbstractFood {
 	@GuardedBy("this.mSemaphore")
 	@Override
 	public boolean eat() throws InterruptedException {
-		boolean hasSucceded = false;
-		
+		boolean hasEaten = false;
 		if(mSemaphore.tryAcquire()) {
 			try {
-				mSemaphore.acquire();
 				if(isFoodAvailable()) {
 					--foodStock;
-					hasSucceded = true;
+					hasEaten = true;
 				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				throw e;
 			} finally {
 				mSemaphore.release();
 			}
 		}
 		
-		return hasSucceded;
+		return hasEaten;
 	}
 	
 	@GuardedBy("this.mSemaphore")
 	@Override
 	public boolean supplement(long supplementStock) {
-		boolean hasSucceded = false;
 		if(mSemaphore.tryAcquire()) {
 			try {
-				mSemaphore.acquire();
 				foodStock += supplementStock;
-				hasSucceded = true;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
 			} finally {
 				mSemaphore.release();
 			}
+			return true;
 		}
 		
-		return hasSucceded;
+		return false;
 	}
 }
