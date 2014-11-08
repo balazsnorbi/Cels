@@ -2,6 +2,9 @@ package com.cells.food;
 
 import java.util.logging.Logger;
 
+import javax.annotation.Generated;
+
+import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 /**
@@ -24,7 +27,8 @@ class FoodMonitor extends AbstractFood {
 	protected FoodMonitor(long foodStock) {
 		this.foodStock = foodStock;
 	}
-
+	
+	@GuardedBy("this")
 	@Override
 	public synchronized boolean eat() {
 		if(isFoodAvailable()) {
@@ -34,7 +38,8 @@ class FoodMonitor extends AbstractFood {
 		
 		return false;
 	}
-
+	
+	@GuardedBy("this")
 	@Override
 	public synchronized boolean supplement(long supplementStock) {
 		foodStock += supplementStock;

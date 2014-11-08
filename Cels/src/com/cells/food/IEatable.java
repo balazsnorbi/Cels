@@ -12,8 +12,9 @@ public interface IEatable {
 	 * 
 	 * @return
 	 * 		<code> true </code> if succeeded,<code> false </code> otherwise
+	 * @throws InterruptedException 
 	 */
-	boolean eat();
+	boolean eat() throws InterruptedException;
 	
 	/**
 	 * Simulate supplementing the food stock task.

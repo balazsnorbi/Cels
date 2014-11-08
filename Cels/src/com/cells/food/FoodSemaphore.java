@@ -3,6 +3,7 @@ package com.cells.food;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Logger;
 
+import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 /**
@@ -29,9 +30,10 @@ class FoodSemaphore extends AbstractFood {
 		this.foodStock = foodStock;
 		this.mSemaphore = new Semaphore(1, enableFairness);
 	}
-
+	
+	@GuardedBy("this.mSemaphore")
 	@Override
-	public boolean eat() {
+	public boolean eat() throws InterruptedException {
 		boolean hasSucceded = false;
 		
 		if(mSemaphore.tryAcquire()) {
@@ -43,6 +45,7 @@ class FoodSemaphore extends AbstractFood {
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				throw e;
 			} finally {
 				mSemaphore.release();
 			}
@@ -50,7 +53,8 @@ class FoodSemaphore extends AbstractFood {
 		
 		return hasSucceded;
 	}
-
+	
+	@GuardedBy("this.mSemaphore")
 	@Override
 	public boolean supplement(long supplementStock) {
 		boolean hasSucceded = false;
