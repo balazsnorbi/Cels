@@ -19,9 +19,7 @@ public class Main {
 		Thread asexuatedCell1 = CellFactory.Asexuated.create();
 		Thread sexuatedCell2 = CellFactory.Sexuated.create();
 		Thread asexuatedCell2 = CellFactory.Asexuated.create();
-		Thread register = new Thread(new Register());
 		
-		register.start();
 		sexuatedCell1.start();
 		asexuatedCell1.start();
 		sexuatedCell2.start();
@@ -32,7 +30,6 @@ public class Main {
 			asexuatedCell1.join();
 			sexuatedCell2.join();
 			asexuatedCell2.join();
-			register.join();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
