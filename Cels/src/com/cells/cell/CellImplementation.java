@@ -8,13 +8,14 @@
 package com.cells.cell;
 
 import java.util.Random;
+import com.cells.register.*;
 
 /**
  * Base implementation for Cells. 
  */
 class CellImplementation implements ICell{
 
-	private int food = 3;
+	private int food = 5;
 
 	/**
 	 * Represents 100 milliseconds
@@ -38,6 +39,8 @@ class CellImplementation implements ICell{
 	 */
 	private int cellID;
 
+	
+	private boolean cellInRegisteredQueue = false;
 	/**
 	 * @brief Constructor
 	 * @param timeBeforeHunger Represents the time between eating a food and becoming hungry in milliseconds
@@ -101,8 +104,8 @@ class CellImplementation implements ICell{
 	 */
 	@Override
 	public void onReadyForMultiplication() {
-		// TODO Auto-generated method stub
-
+		Register.registerCell(this);
+		cellInRegisteredQueue = true;
 	}
 
 	/**
@@ -114,6 +117,7 @@ class CellImplementation implements ICell{
 		int timeBeforeHunger = _timeBeforeHunger;
 		int time = timeGenerator.nextInt(500);
 		boolean foodFound;
+		int numberOfEat = 0;
 
 		System.out.println("Cell_" + getCellID() + " borned!");
 
@@ -138,6 +142,10 @@ class CellImplementation implements ICell{
 					// Restore energy level! :)
 					timeBeforeHunger = _timeBeforeHunger;
 					timeBeforeDie = _timeBeforeDie;
+					numberOfEat++;
+					if(numberOfEat == 2){
+						onReadyForMultiplication();
+					}
 					break;
 				} else {
 					try {
@@ -155,6 +163,12 @@ class CellImplementation implements ICell{
 			}
 		}
 		// Damn. I'm just died of starvation 
+		if(Register.removeSpecifiedCell(this)){
+			System.out.println("SPECIFIED THREAD REMOVED FROM QUEUE");
+		}
+		else{
+			System.out.println("SPECIFIED THREAD WASN'T IN QUEUE");
+		}
 		die();
 	}
 
