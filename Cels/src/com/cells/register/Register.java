@@ -15,16 +15,13 @@ import com.cells.cell.ICell;
  * @author Roland
  *
  */
-public class Register implements Runnable{
+public class Register{ //implements Runnable{
 
-	private static BlockingQueue<ICell> cellQueue;
-	
-	public Register(){
-		cellQueue = new ArrayBlockingQueue<ICell>(1000);
-	}
+	private static BlockingQueue<ICell> cellQueue = new ArrayBlockingQueue<ICell>(1000);
 	
 	/**
-	 * 
+	 * Registers the Cells in the queue, if there are two 'good' cells in the queue -> 
+	 * 			remove them and create the third cell
 	 * @param cell - put in the queue the Cell which wants to divide
 	 * 
 	 */
@@ -32,36 +29,17 @@ public class Register implements Runnable{
 		if(cell != null){
 			try {
 				cellQueue.put(cell);
-				System.out.println("PUTTED IN QUEUE");
+				if(cellQueue.size() > 1){
+					cellQueue.take();
+					cellQueue.take();
+					CellFactory.Sexuated.create().start();
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	@Override
-	public void run(){
-		while(true){
-			if(cellQueue.size() > 1){
-				removePairsFromQueue();
-				CellFactory.Sexuated.create().start();
-			}
-		}
-	}
-
-	/**
-	 * 
-	 * @ removes first two cells from the queue 
-	 */
-	private synchronized void removePairsFromQueue(){
-		try {
-			System.out.println("PAIRS REMOVED");
-			cellQueue.take();
-			cellQueue.take();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * 
