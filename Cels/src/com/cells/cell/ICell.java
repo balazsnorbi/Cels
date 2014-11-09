@@ -14,16 +14,23 @@ public interface ICell extends Runnable{
 
 	/**
 	 * Describes what the cell behavior on moving 
+	 * @return boolean - true on success, false on error
 	 */
-	public void move();
+	public boolean move(int duration);
 	
 	/**
 	 * Describes the thread behavior on eating
+	 * @return boolean - true on success, false on error
 	 */
-	public void eat();
+	public boolean eat();
 	
 	/**
 	 * Describe what to do when the cell is left without food
 	 */
 	public void die();
+	
+	/**
+	 * Method called when a cell is ready for multiplication
+	 */
+	public void onReadyForMultiplication();
 }

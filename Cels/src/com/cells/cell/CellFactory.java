@@ -28,14 +28,14 @@ public enum CellFactory {
 	/**
 	 * Each cell(thread) will be assigned with a unique ID 
 	 */
-	private int NEXT_THREAD_ID = 0;
+	private static int NEXT_THREAD_ID = 0;
 	
 	/**
 	 * Cell creator method
 	 * @brief Returns a new cell 
-	 * @return
+	 * @return Thread
 	 */
-	public ICell create() {
+	public Thread create() {
 		ICell cell = null;
 		
 		switch (CellFactory.valueOf(name())){
@@ -47,10 +47,17 @@ public enum CellFactory {
 			break;
 		}
 		
-		return cell;
+		return createCellThread(cell);
 	}
 	
-	public ICell create(int timeBeforeHunger, int timeBeforeDie){
+	/**
+	 * Cell creator method
+	 * @brief  Returns a new cell 
+	 * @param timeBeforeHunger
+	 * @param timeBeforeDie
+	 * @return Thread
+	 */
+	public Thread create(int timeBeforeHunger, int timeBeforeDie){
 		ICell cell = null;
 		
 		switch(CellFactory.valueOf(name())){
@@ -62,7 +69,21 @@ public enum CellFactory {
 			break;
 		}
 		
-		return cell;
+		return createCellThread(cell);
+	}
+	
+	/**
+	 * @brief Returns a cell thread ready to be started
+	 * @param cell
+	 * @return
+	 */
+	private Thread createCellThread(ICell cell) {
+		Thread thread = null; 
+		if (cell != null) {
+			thread = new Thread(cell);
+		}
+		
+		return thread;
 	}
 	
 	/**

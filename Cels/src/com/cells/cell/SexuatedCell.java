@@ -10,48 +10,13 @@ package com.cells.cell;
 /**
  * Represents a concrete cell which can move, eat and die
  */
-class SexuatedCell extends AbstractCell{
-
+class SexuatedCell extends CellImplementation{
+	
 	/**
 	 * @brief Constructor
-	 * @see com.cells.cell.AbstractCell#AbstractCell(int, int, int)
+	 * @see com.cells.cell.CellImplementation#AbstractCell(int, int, int)
 	 */
-	SexuatedCell(int timeBeforeHunger, int timeBeforeDie, int cellID) {
+	protected SexuatedCell(int timeBeforeHunger, int timeBeforeDie, int cellID) {
 		super(timeBeforeHunger, timeBeforeDie, cellID);
-	}
-
-	/* (non-Javadoc)
-	 * @see com.cells.cell.AbstractCell#move()
-	 */
-	@Override
-	public void move() {
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see com.cells.cell.AbstractCell#eat()
-	 */
-	@Override
-	public void eat() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see com.cells.cell.AbstractCell#die()
-	 */
-	@Override
-	public void die() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.cells.cell.AbstractCell#run()
-	 */
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
 	}
 }
