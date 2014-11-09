@@ -7,6 +7,7 @@
  */
 package com.cells.cell;
 
+
 /**
  * Represents a concrete cell which can move, eat and die
  */
@@ -18,5 +19,14 @@ class AsexuatedCell extends CellImplementation{
 	 */
 	protected AsexuatedCell(int timeBeforeHunger, int timeBeforeDie, int cellID) {
 		super(timeBeforeHunger, timeBeforeDie, cellID);
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.cells.cell.CellImplementation#onReadyForMultiplication()
+	 */
+	@Override
+	public void onReadyForMultiplication() {
+		CellFactory.Asexuated.create(getTimeBeforeHunger(), getTimeBeforeDie())
+			.start();
 	}
 }

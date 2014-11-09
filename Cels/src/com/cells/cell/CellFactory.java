@@ -7,6 +7,9 @@
  */
 package com.cells.cell;
 
+import com.cells.food.FoodFactory;
+import com.cells.food.IEatable;
+
 
 /**
  * Use this Singleton to create cell objects
@@ -26,9 +29,19 @@ public enum CellFactory {
 	private final int TIME_BEFORE_DIE = 5000; 
 	
 	/**
+	 * Food stock size
+	 */
+	private static final int FOOD_STOCK = 3;
+	
+	/**
 	 * Each cell(thread) will be assigned with a unique ID 
 	 */
 	private static int NEXT_THREAD_ID = 0;
+	
+	/**
+	 * The currently used food type
+	 */
+	private static IEatable activeEatable = FoodFactory.getInstance("FoodSemaphore", FOOD_STOCK, false);
 	
 	/**
 	 * Cell creator method
@@ -46,6 +59,8 @@ public enum CellFactory {
 			cell = getAsexuatedCell();
 			break;
 		}
+		
+		((CellImplementation)cell).setEatable(activeEatable);
 		
 		return createCellThread(cell);
 	}

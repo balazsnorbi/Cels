@@ -7,6 +7,8 @@
  */
 package com.cells.cell;
 
+import com.cells.register.Register;
+
 /**
  * Represents a concrete cell which can move, eat and die
  */
@@ -18,5 +20,22 @@ class SexuatedCell extends CellImplementation{
 	 */
 	protected SexuatedCell(int timeBeforeHunger, int timeBeforeDie, int cellID) {
 		super(timeBeforeHunger, timeBeforeDie, cellID);
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.cells.cell.CellImplementation#onReadyForMultiplication()
+	 */
+	@Override
+	public void onReadyForMultiplication() {
+		Register.registerCell(this);
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.cells.cell.CellImplementation#die()
+	 */
+	@Override
+	public void die() {
+		super.die();
+		Register.removeSpecifiedCell(this);
 	}
 }

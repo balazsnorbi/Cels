@@ -7,23 +7,16 @@
  */
 package com.cells.cell;
 
-import java.util.Random;
-import com.cells.register.*;
+import com.cells.food.IEatable;
+import com.cells.register.Register;
 
 /**
  * Base implementation for Cells. 
  */
-class CellImplementation implements ICell{
-
-	private int food = 5;
-
-	/**
-	 * Represents 100 milliseconds
-	 */
-	private int TIME_SEQUENCE = 1000;
+abstract class CellImplementation implements ICell{
 	
-	private Random timeGenerator;
-
+	private final int EAT_TIME_BEFORE_MULTIPLY = 10;
+	
 	/**
 	 * Represents the time between eating a food and becoming hungry in milliseconds
 	 */
@@ -39,8 +32,16 @@ class CellImplementation implements ICell{
 	 */
 	private int cellID;
 
+	/**
+	 * Counter for eaten food. 
+	 */
+	private int eatenFoodCount;
 	
-	private boolean cellInRegisteredQueue = false;
+	/**
+	 * 
+	 */
+	private IEatable eatable;
+	
 	/**
 	 * @brief Constructor
 	 * @param timeBeforeHunger Represents the time between eating a food and becoming hungry in milliseconds
@@ -52,25 +53,31 @@ class CellImplementation implements ICell{
 		setTimeBeforeDie(timeBeforeDie);
 		setCellID(cellID);
 		
-		timeGenerator = new Random();
+		eatenFoodCount = 0;
+	}
+	
+	/**
+	 * @brief Setter for eatable
+	 * @param eatable
+	 */
+	public void setEatable(IEatable eatable) {
+		this.eatable = eatable;
 	}
 
 	/**
 	 * Describes what the cell behavior on moving 
 	 */
 	@Override
-	public boolean move(int duration) {
-		boolean succeded = true;
-
-		try {
-			System.out.println("Cell_" + getCellID() + " is moving!");
-			Thread.sleep(duration);
-		} catch (InterruptedException e) {
-			System.out.println("Cell_" + getCellID() + " caused problem: " + e.getMessage().toString());
-			succeded = false;
+	public void move() {
+		// Define the time when the cell finished the moving process 
+		long finalTime = System.currentTimeMillis() + _timeBeforeHunger;
+		// Let's moving!
+		while (System.currentTimeMillis() <= finalTime) {
+			// At this point, please do nothing. 
+			// The cell is alive and he is moving all around in the universe.
+			// TODO: Remove next line
+			System.out.println("Move: " + getCellID());
 		}
-
-		return succeded;
 	}
 
 	/**
@@ -79,14 +86,26 @@ class CellImplementation implements ICell{
 	@Override
 	public boolean eat() {
 		boolean successed = false;
-		// TODO: Add implementation here!
-		// TODO: Restore _timeToDie value after success!
-		if (food > 0) {
-			System.out.println("Cell_" + getCellID() + " is eating");
-			food --;
-			successed = true;
+		// This is the last time when the cell can eat
+		long finalTime = System.currentTimeMillis() + _timeBeforeDie;
+		// Try to get the food!
+		try {
+			while (successed != true && System.currentTimeMillis() <= finalTime){
+				// Food?
+				successed = eatable.eat();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 
+		// Call this method to check eaten food count
+		if (successed == true) {
+			eatenFoodCount ++;
+			if (eatenFoodCount >= EAT_TIME_BEFORE_MULTIPLY){
+				Register.registerCell(this);
+			}
+		}
+		
 		return successed;
 	}
 
@@ -94,81 +113,32 @@ class CellImplementation implements ICell{
 	 * Describe what to do when the cell is left without food
 	 */
 	@Override
-	public void die() {
+	public void die(){
 		System.out.println("Cell_" + getCellID() + " is DEAD");
-		Thread.yield();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.cells.cell.ICell#onReadyForMultiplication()
 	 */
 	@Override
-	public void onReadyForMultiplication() {
-		Register.registerCell(this);
-		cellInRegisteredQueue = true;
-	}
+	public abstract void onReadyForMultiplication();
 
 	/**
 	 * General method which describes the "cell" thread behavior
 	 */
 	@Override
 	public void run(){
-		int timeBeforeDie = _timeBeforeDie;
-		int timeBeforeHunger = _timeBeforeHunger;
-		int time = timeGenerator.nextInt(500);
-		boolean foodFound;
-		int numberOfEat = 0;
-
+		boolean foodFound = false;
+		//
 		System.out.println("Cell_" + getCellID() + " borned!");
-
-		// While cell has energy, it tries to obtain food
-		while(timeBeforeHunger > 0 && timeBeforeDie > 0)
-		{
-			// Has it eaten a food? Not yet...
-			foodFound = false;
-			// MOVING...MOVING...MOVING...
-			while (timeBeforeHunger > 0 && move(time)) {
-				timeBeforeHunger -= TIME_SEQUENCE;
-				time = timeGenerator.nextInt(500);
-				// Crop time if needed
-				if (time > timeBeforeHunger)
-					time = timeBeforeHunger;
-			}
-			// But there is a little more energy, which can save my life...
-			while (timeBeforeDie > 0) {
-				// Food?
-				foodFound = eat();
-				if (foodFound == true){
-					// Restore energy level! :)
-					timeBeforeHunger = _timeBeforeHunger;
-					timeBeforeDie = _timeBeforeDie;
-					numberOfEat++;
-					if(numberOfEat == 2){
-						onReadyForMultiplication();
-					}
-					break;
-				} else {
-					try {
-						// No food found yet :(
-						time = timeGenerator.nextInt(500);
-						// Crop it if needed
-						if (time > timeBeforeDie)
-							time = timeBeforeDie;
-						Thread.sleep(timeBeforeDie);
-						timeBeforeDie -= TIME_SEQUENCE;
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
+		//
+		do {
+			// Just move a little to ensure cell condition
+			move();
+			// Let's get energy back
+			foodFound = eat();
+		}while (foodFound == true);
 		// Damn. I'm just died of starvation 
-		if(Register.removeSpecifiedCell(this)){
-			System.out.println("SPECIFIED THREAD REMOVED FROM QUEUE");
-		}
-		else{
-			System.out.println("SPECIFIED THREAD WASN'T IN QUEUE");
-		}
 		die();
 	}
 
@@ -179,6 +149,14 @@ class CellImplementation implements ICell{
 	private void setTimeBeforeHunger(int timeBeforeHunger) {
 		this._timeBeforeHunger = timeBeforeHunger;
 	}
+	
+	/**
+	 * @brief getter for timeBeforeHunger
+	 * @return _timeBeforeHunger
+	 */
+	protected int getTimeBeforeHunger() {
+		return _timeBeforeHunger;
+	}
 
 	/**
 	 * @brief Setter for timeBeforeDie
@@ -187,7 +165,14 @@ class CellImplementation implements ICell{
 	private void setTimeBeforeDie(int timeBeforeDie) {
 		this._timeBeforeDie = timeBeforeDie;
 	}
-
+	
+	/**
+	 * @brief getter for _timeBeforeDie
+	 * @return _timeBeforeDie
+	 */
+	protected int getTimeBeforeDie() {
+		return _timeBeforeDie;
+	}
 
 	/**
 	 * @brief Setter for cellID

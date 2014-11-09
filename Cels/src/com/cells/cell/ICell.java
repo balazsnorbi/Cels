@@ -14,9 +14,8 @@ public interface ICell extends Runnable{
 
 	/**
 	 * Describes what the cell behavior on moving 
-	 * @return boolean - true on success, false on error
 	 */
-	public boolean move(int duration);
+	public void move();
 	
 	/**
 	 * Describes the thread behavior on eating
