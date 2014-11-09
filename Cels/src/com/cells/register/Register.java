@@ -15,7 +15,7 @@ import com.cells.cell.ICell;
  * @author Roland
  *
  */
-public class Register{ //implements Runnable{
+public class Register{ 
 
 	private static BlockingQueue<ICell> cellQueue = new ArrayBlockingQueue<ICell>(1000);
 	
