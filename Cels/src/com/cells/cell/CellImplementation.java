@@ -7,16 +7,20 @@
  */
 package com.cells.cell;
 
+import java.util.Random;
+
 import com.cells.food.IEatable;
-import com.cells.register.Register;
 
 /**
  * Base implementation for Cells. 
  */
 abstract class CellImplementation implements ICell{
-	
-	private final int EAT_TIME_BEFORE_MULTIPLY = 10;
-	
+
+	/**
+	 * The minimal food count that have to be eaten before multiplying
+	 */
+	private final int EAT_TIME_BEFORE_MULTIPLY = 5;
+
 	/**
 	 * Represents the time between eating a food and becoming hungry in milliseconds
 	 */
@@ -38,10 +42,15 @@ abstract class CellImplementation implements ICell{
 	private int eatenFoodCount;
 	
 	/**
-	 * 
+	 * Represents the number of multiplications
+	 */
+	private int multiplied;
+
+	/**
+	 * Food store
 	 */
 	private IEatable eatable;
-	
+
 	/**
 	 * @brief Constructor
 	 * @param timeBeforeHunger Represents the time between eating a food and becoming hungry in milliseconds
@@ -52,10 +61,11 @@ abstract class CellImplementation implements ICell{
 		setTimeBeforeHunger(timeBeforeHunger);
 		setTimeBeforeDie(timeBeforeDie);
 		setCellID(cellID);
-		
+
 		eatenFoodCount = 0;
+		multiplied = 0;
 	}
-	
+
 	/**
 	 * @brief Setter for eatable
 	 * @param eatable
@@ -75,8 +85,6 @@ abstract class CellImplementation implements ICell{
 		while (System.currentTimeMillis() <= finalTime) {
 			// At this point, please do nothing. 
 			// The cell is alive and he is moving all around in the universe.
-			// TODO: Remove next line
-			System.out.println("Move: " + getCellID());
 		}
 	}
 
@@ -98,14 +106,18 @@ abstract class CellImplementation implements ICell{
 			e.printStackTrace();
 		}
 
+
 		// Call this method to check eaten food count
 		if (successed == true) {
 			eatenFoodCount ++;
 			if (eatenFoodCount >= EAT_TIME_BEFORE_MULTIPLY){
-				Register.registerCell(this);
+				onReadyForMultiplication();
 			}
 		}
 		
+		//Todo: Remove
+		System.out.println("ID_" + getCellID() + " eatenFood: " + eatenFoodCount);
+
 		return successed;
 	}
 
@@ -114,7 +126,12 @@ abstract class CellImplementation implements ICell{
 	 */
 	@Override
 	public void die(){
-		System.out.println("Cell_" + getCellID() + " is DEAD");
+		Random random = new Random();
+		int recovered_food = 1 + random.nextInt(4);
+
+		eatable.supplement(recovered_food);
+
+		System.out.println("ID_" + getCellID() + " is DEAD - (" + eatenFoodCount + "/" + recovered_food + ")" + " multiplied: " + multiplied);
 	}
 
 	/* (non-Javadoc)
@@ -130,14 +147,16 @@ abstract class CellImplementation implements ICell{
 	public void run(){
 		boolean foodFound = false;
 		//
-		System.out.println("Cell_" + getCellID() + " borned!");
+		System.out.println("ID_" + getCellID() + " borned!");
+		// Get energy
+		foodFound = eat();
 		//
-		do {
+		while (foodFound == true) {
 			// Just move a little to ensure cell condition
 			move();
 			// Let's get energy back
 			foodFound = eat();
-		}while (foodFound == true);
+		}
 		// Damn. I'm just died of starvation 
 		die();
 	}
@@ -149,7 +168,7 @@ abstract class CellImplementation implements ICell{
 	private void setTimeBeforeHunger(int timeBeforeHunger) {
 		this._timeBeforeHunger = timeBeforeHunger;
 	}
-	
+
 	/**
 	 * @brief getter for timeBeforeHunger
 	 * @return _timeBeforeHunger
@@ -165,7 +184,7 @@ abstract class CellImplementation implements ICell{
 	private void setTimeBeforeDie(int timeBeforeDie) {
 		this._timeBeforeDie = timeBeforeDie;
 	}
-	
+
 	/**
 	 * @brief getter for _timeBeforeDie
 	 * @return _timeBeforeDie
@@ -188,5 +207,13 @@ abstract class CellImplementation implements ICell{
 	 */
 	protected int getCellID() {
 		return cellID;
+	}
+	
+	/**
+	 * Decrease the eatenFood count
+	 */
+	public void afterMultiplication(){
+		eatenFoodCount -= EAT_TIME_BEFORE_MULTIPLY;
+		multiplied++;
 	}
 }

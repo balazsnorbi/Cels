@@ -31,7 +31,7 @@ public enum CellFactory {
 	/**
 	 * Food stock size
 	 */
-	private static final int FOOD_STOCK = 3;
+	private static final int FOOD_STOCK = 150;
 	
 	/**
 	 * Each cell(thread) will be assigned with a unique ID 
@@ -41,7 +41,7 @@ public enum CellFactory {
 	/**
 	 * The currently used food type
 	 */
-	private static IEatable activeEatable = FoodFactory.getInstance("FoodSemaphore", FOOD_STOCK, false);
+	private static IEatable activeEatable = FoodFactory.getInstance("FoodMonitor", FOOD_STOCK, false);
 	
 	/**
 	 * Cell creator method
@@ -83,6 +83,8 @@ public enum CellFactory {
 			cell = getAsexuatedCell(timeBeforeHunger, timeBeforeDie);
 			break;
 		}
+		
+		((CellImplementation)cell).setEatable(activeEatable);
 		
 		return createCellThread(cell);
 	}

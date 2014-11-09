@@ -26,12 +26,12 @@ public class Register{
 	 * 
 	 */
 	public static synchronized void registerCell(ICell cell) {
-		if(cell != null){
+		if(cell != null && !cellQueue.contains(cell)){
 			try {
 				cellQueue.put(cell);
 				if(cellQueue.size() > 1){
-					cellQueue.take();
-					cellQueue.take();
+					cellQueue.take().afterMultiplication();
+					cellQueue.take().afterMultiplication();
 					CellFactory.Sexuated.create().start();
 				}
 			} catch (InterruptedException e) {

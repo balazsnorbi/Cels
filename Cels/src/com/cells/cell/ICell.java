@@ -32,4 +32,9 @@ public interface ICell extends Runnable{
 	 * Method called when a cell is ready for multiplication
 	 */
 	public void onReadyForMultiplication();
+	
+	/**
+	 * Called by register after multiplication completed
+	 */
+	public void afterMultiplication();
 }

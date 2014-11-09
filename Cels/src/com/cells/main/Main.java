@@ -17,7 +17,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		List<Thread> cells = new ArrayList<Thread>();
-		for(int i=0; i < 10; i++) {
+		for(int i=0; i < 5; i++) {
 			cells.add(CellFactory.Sexuated.create());
 			cells.add(CellFactory.Asexuated.create());
 		}

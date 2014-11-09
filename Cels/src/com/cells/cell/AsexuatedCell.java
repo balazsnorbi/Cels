@@ -26,7 +26,7 @@ class AsexuatedCell extends CellImplementation{
 	 */
 	@Override
 	public void onReadyForMultiplication() {
-		CellFactory.Asexuated.create(getTimeBeforeHunger(), getTimeBeforeDie())
-			.start();
+		afterMultiplication();
+		CellFactory.Asexuated.create(getTimeBeforeHunger(), getTimeBeforeDie()).start();
 	}
 }
